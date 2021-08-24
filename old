@@ -1,0 +1,26 @@
+def self.scrape_profile_page(profile_url)
+    
+    html = open(profile_url)
+    doc = Nokogiri::HTML(html)
+    profile_hash = {
+      :profile_quote => doc.css("div.main-wrapper div.vitals-container div.vitals-text-container div.profile-quote").text,
+      :bio => doc.css("div.main-wrapper div.details-container div.bio-block div.bio-content div.description-holder p").text
+    }
+    social_scrape = doc.css("div.main-wrapper div.vitals-container div.social-icon-container a")
+    social_scrape.each do |k|
+      target = k.attr("href")
+      if target.include?("twitter")
+        profile_hash[:twitter] = target
+      elsif target.include?("twitter")
+        profile_hash[:linkedin] = target
+      elsif target.include?("twitter")
+        profile_hash[:github] = target
+      else
+        profile_hash[:blog] = target
+      end
+    end
+    
+    profile_hash
+  end
+
+end
